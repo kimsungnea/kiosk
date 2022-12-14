@@ -445,4 +445,4 @@ void CkioskView::OnMouseMove(UINT nFlags, CPoint point)
 	}
 	// 민지원 ------------------------------------------------------------------------
 	CView::OnMouseMove(nFlags, point);
-}12.1
+}
