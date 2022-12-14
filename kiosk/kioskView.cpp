@@ -39,6 +39,7 @@ END_MESSAGE_MAP()
 #include "Paymentbox.h"  //김성내
 #include <iostream>
 #define NOWMAX 8
+#define MAIN 1
 #define MENU 2
 #define PAY 3
 CRectMenu *menu[6][12];
@@ -54,7 +55,7 @@ CkioskView::CkioskView() noexcept
 	m_nowTab = 0;
 	m_total = 0;
 	m_numNow = 0;
-	m_status = MENU;
+	m_status = MAIN;
 
 	CString menus[6][12][3] = {
 		{
@@ -184,106 +185,113 @@ void CkioskView::OnDraw(CDC* pDC)
 	CBrush brush(RGB(255, 255, 255));
 	pDC->SelectObject(&brush);
 
-	CPen pen2;
-	pen2.CreatePen(PS_SOLID, 4, RGB(146, 216, 240));
-	pDC->SelectObject(&pen2);
+	if (m_status == MAIN) {
+		CImage background;
+		background.Load(L"res/background.png");
+		background.Draw(*pDC, 0, 0, 1920, 950);
+	}
+	else{
+		CPen pen2;
+		pen2.CreatePen(PS_SOLID, 4, RGB(146, 216, 240));
+		pDC->SelectObject(&pen2);
 
-	pDC->MoveTo(0, 100);
-	pDC->LineTo(1470, 100);
+		pDC->MoveTo(0, 100);
+		pDC->LineTo(1470, 100);
 
-	pDC->MoveTo(1470, 0);
-	pDC->LineTo(1470, 950);
+		pDC->MoveTo(1470, 0);
+		pDC->LineTo(1470, 950);
 
-	CRect nowBox(1480, 10, 1910, 800);
-	pDC->Rectangle(nowBox);
-	
-	CFont font;
-	font.CreatePointFont(400, _T("맑은고딕"));
-	pDC->SelectObject(&font);
+		CRect nowBox(1480, 10, 1910, 800);
+		pDC->Rectangle(nowBox);
 
-	CRect payBox(1480, 810, 1910, 940);
-	pDC->Rectangle(payBox);
-	pDC->DrawText(L"결     제", payBox, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+		CFont font;
+		font.CreatePointFont(400, _T("맑은고딕"));
+		pDC->SelectObject(&font);
 
-	CPen pen1;
-	pen1.CreatePen(PS_SOLID, 2, RGB(146, 216, 240));
-	pDC->SelectObject(&pen1);
+		CRect payBox(1480, 810, 1910, 940);
+		pDC->Rectangle(payBox);
+		pDC->DrawText(L"결     제", payBox, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-	for (int i = 0; i < 6; i++) {
-		
-		if (m_nowTab != i) {
-			CPen* oldPen = pDC->SelectObject(&pen2);
-			tab[i]->draw(pDC);
+		CPen pen1;
+		pen1.CreatePen(PS_SOLID, 2, RGB(146, 216, 240));
+		pDC->SelectObject(&pen1);
+
+		for (int i = 0; i < 6; i++) {
+
+			if (m_nowTab != i) {
+				CPen* oldPen = pDC->SelectObject(&pen2);
+				tab[i]->draw(pDC);
+				pDC->SelectObject(oldPen);
+			}
+			CPen pen3(PS_SOLID, 7, RGB(57, 117, 135));
+			CPen* oldPen = pDC->SelectObject(&pen3);
+			tab[m_nowTab]->draw(pDC);
 			pDC->SelectObject(oldPen);
 		}
-		CPen pen3(PS_SOLID, 7, RGB(57, 117, 135));
-		CPen* oldPen = pDC->SelectObject(&pen3);
-		tab[m_nowTab]->draw(pDC);
-		pDC->SelectObject(oldPen);
-	}
 
-	pDC->SelectObject(&pen1);
+		pDC->SelectObject(&pen1);
 
-	m_total = 0;
-	for (int i = 0; i < m_numNow; i++) {
-		now[i]->draw(pDC);
-		m_total += _ttoi(now[i]->menu->price) * now[i]->count; // 김현준, 민지원
-	}
-
-	CFont font2;
-	font2.CreatePointFont(300, _T("맑은고딕"));
-	pDC->SelectObject(&font2);
-
-	CRect totalBox(1490, 700, 1900, 790);
-	pDC->Rectangle(totalBox);
-	CString totalStr;
-	totalStr.Format(_T("%d 원"), m_total);
-	CRect totalBox2(1493, 703, 1897, 787);
-	pDC->DrawText(totalStr, totalBox2, DT_RIGHT | DT_VCENTER | DT_SINGLELINE);
-
-	for (int i = 0; i < 12; i++) {
-		menu[m_nowTab][i]->draw(pDC);
-	}
-	// 민지원 ------------------------------------------------------------------------
-
-	// 김성내 ------------------------------------------------------------------------
-	CBrush brush1(RGB(146, 216, 240));
-	CBrush* oldBrush1 = pDC->SelectObject(&brush1);
-	CRect paywindow(200, 50, 1500, 900);			
-
-	CPen pen4;
-	pen4.CreatePen(PS_SOLID, 3, RGB(0, 0, 0));
-	CPen* oldpen4 = pDC->SelectObject(&pen4);
-	CRect paywindow_line(200, 50, 1500, 900);
-
-	CRect pay_x(1400, 800, 1500, 900);		
-
-	CRect pay_success(1150, 150, 1450, 700);
-
-	if (m_status==PAY)
-	{
-
-		pDC->Rectangle(paywindow);
-		pDC->SelectObject(paywindow);
-
-		pDC->Rectangle(paywindow_line);
-		pDC->SelectObject(paywindow_line);
-
-		CBrush brush2(RGB(255, 255, 255));
-		CBrush* oldBrush2 = pDC->SelectObject(&brush2);
-		pDC->Rectangle(pay_x);
-		pDC->SelectObject(pay_x);
-		pDC->DrawText(L"X", pay_x, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-		pDC->SetTextColor(RGB(0, 0, 0));
-		pDC->SelectObject(pay_success);
-		pDC->Rectangle(pay_success);
-		pDC->DrawText(L"결제하기", pay_success, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-		for (int i = 0; i < m_numNow; i++)
-		{
-			p_now[i]->draw(pDC);
+		m_total = 0;
+		for (int i = 0; i < m_numNow; i++) {
+			now[i]->draw(pDC);
+			m_total += _ttoi(now[i]->menu->price) * now[i]->count; // 김현준, 민지원
 		}
+
+		CFont font2;
+		font2.CreatePointFont(300, _T("맑은고딕"));
+		pDC->SelectObject(&font2);
+
+		CRect totalBox(1490, 700, 1900, 790);
+		pDC->Rectangle(totalBox);
+		CString totalStr;
+		totalStr.Format(_T("%d 원"), m_total);
+		CRect totalBox2(1493, 703, 1897, 787);
+		pDC->DrawText(totalStr, totalBox2, DT_RIGHT | DT_VCENTER | DT_SINGLELINE);
+
+		for (int i = 0; i < 12; i++) {
+			menu[m_nowTab][i]->draw(pDC);
+		}
+		// 민지원 ------------------------------------------------------------------------
+
+		// 김성내 ------------------------------------------------------------------------
+		CBrush brush1(RGB(146, 216, 240));
+		CBrush* oldBrush1 = pDC->SelectObject(&brush1);
+		CRect paywindow(200, 50, 1500, 900);
+
+		CPen pen4;
+		pen4.CreatePen(PS_SOLID, 3, RGB(0, 0, 0));
+		CPen* oldpen4 = pDC->SelectObject(&pen4);
+		CRect paywindow_line(200, 50, 1500, 900);
+
+		CRect pay_x(1400, 800, 1500, 900);
+
+		CRect pay_success(1150, 150, 1450, 700);
+
+		if (m_status==PAY)
+		{
+
+			pDC->Rectangle(paywindow);
+			pDC->SelectObject(paywindow);
+
+			pDC->Rectangle(paywindow_line);
+			pDC->SelectObject(paywindow_line);
+
+			CBrush brush2(RGB(255, 255, 255));
+			CBrush* oldBrush2 = pDC->SelectObject(&brush2);
+			pDC->Rectangle(pay_x);
+			pDC->SelectObject(pay_x);
+			pDC->DrawText(L"X", pay_x, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+			pDC->SetTextColor(RGB(0, 0, 0));
+			pDC->SelectObject(pay_success);
+			pDC->Rectangle(pay_success);
+			pDC->DrawText(L"결제하기", pay_success, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+			for (int i = 0; i < m_numNow; i++)
+			{
+				p_now[i]->draw(pDC);
+			}
+		}
+		// 김성내 ------------------------------------------------------------------------
 	}
-	// 김성내 ------------------------------------------------------------------------
 }
 
 // CkioskView 인쇄
@@ -333,16 +341,19 @@ void CkioskView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	// 민지원 ------------------------------------------------------------------------
-	if (m_status == MENU) {  //김성내
+	bool isClicked = false;
+	if (m_status == MAIN) {
+		m_status = MENU;
+		isClicked = true;
+	}
+
+	if (m_status == MENU && !isClicked) {  //김성내
 		for (int i = 0; i < 6; i++) {
 			if (tab[i]->checkClick(point)) {
 				m_nowTab = i;
 				break;
 			}
 		}
-	}
-
-	if (m_status == MENU) {  //김성내
 		for (int i = 0; i < 12; i++) {
 			if (menu[m_nowTab][i]->checkClick(point) && m_numNow < NOWMAX && (menu[m_nowTab][i]->price != L"0")) {
 				bool isInNow = false;
@@ -358,13 +369,11 @@ void CkioskView::OnLButtonDown(UINT nFlags, CPoint point)
 				now[m_numNow] = new CRectNow(CPoint(1490, 20 + 80 * m_numNow), menu[m_nowTab][i]);
 				p_now[m_numNow] = new Paymentbox(CPoint(250, 100 * m_numNow + 100), menu[m_nowTab][i]); //김성내
 				m_status = MENU;
+				isClicked = true;
 				m_numNow++;
 				break;
 			}
 		}
-	}
-
-	if (m_status == MENU) {
 		for (int i = 0; i < m_numNow; i++) {
 			if (now[i]->checkClick(point)) {
 				for (int j = i; j < m_numNow - 1; j++) {
@@ -374,52 +383,50 @@ void CkioskView::OnLButtonDown(UINT nFlags, CPoint point)
 				break;
 			}
 		}
-	}
-	// 민지원 ------------------------------------------------------------------------
+		// 민지원 ------------------------------------------------------------------------
 
-	// 김현준 ------------------------------------------------------------------------
-	for (int i = 0; i < m_numNow; i++) {
-		if (now[i]->checkClick2(point)) {
-			now[i]->count++;
-			p_now[i]->count++; // 민지원
-			break;
+		// 김현준 ------------------------------------------------------------------------
+		for (int i = 0; i < m_numNow; i++) {
+			if (now[i]->checkClick2(point)) {
+				now[i]->count++;
+				p_now[i]->count++; // 민지원
+				break;
+			}
 		}
-	}
 
-	for (int i = 0; i < m_numNow; i++) {
-		if (now[i]->checkClick3(point) && now[i]->count > 1) {
-			now[i]->count--;
-			p_now[i]->count--; // 민지원
-			break;
+		for (int i = 0; i < m_numNow; i++) {
+			if (now[i]->checkClick3(point) && now[i]->count > 1) {
+				now[i]->count--;
+				p_now[i]->count--; // 민지원
+				break;
+			}
 		}
-	}
-	// 김현준 -------------------------------------------------------------------------------
 	
+	// 김현준 -------------------------------------------------------------------------------
+
 	//김성내---------------------------------------------------------------------
-	if (point.x > 1480 && point.x < 1910 && point.y > 810 && point.y < 940)
-	{
-		if (m_status == MENU)
+		if (point.x > 1480 && point.x < 1910 && point.y > 810 && point.y < 940 && m_total!=0) // 김성내, 민지원
 		{
 			m_status = PAY;
+			isClicked = true; // 민지원
 		}
 	}
-
-	if (m_status == PAY)
+	if (m_status == PAY &&  !isClicked)
 	{
 		if (point.x > 1400 && point.x < 1500 && point.y > 800 && point.y < 900)
 		{
 			m_status = MENU;
+			isClicked = true; // 민지원
 		}
-	}
-	CString str;
-	str.Format(_T("%d원"), m_total);
-	if (m_status == PAY)
-	{
-		if (point.x > 1150 && point.x < 1450 && point.y > 150 && point.y < 700 && MessageBox(str))
-		{
-			m_numNow = 0;
-			m_status = MENU;
-		}
+		CString str;
+		str.Format(_T("%d원"), m_total);
+			if (point.x > 1150 && point.x < 1450 && point.y > 150 && point.y < 700 && MessageBox(str))
+			{
+				m_numNow = 0;
+				m_status = MAIN;
+				m_nowTab = 0; // 민지원
+				isClicked = true; // 민지원
+			}
 	}
 	//김성내-------------------------------------------------------------------- -
 	Invalidate();
