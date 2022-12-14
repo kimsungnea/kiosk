@@ -41,10 +41,14 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
-	int m_nowTab; // 현재 눌러져있는 탭(음료 종류 ex. 커피, 차...)
+	// 민지원 ------------------------------------------------------------------------
+	int m_nowTab;
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	int m_total; // 총 가격
-	int m_numNow; // 담은 음료 개수
+	int m_total;
+	int m_numNow;
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	int m_status;
+	// 민지원 ------------------------------------------------------------------------
 };
 
 #ifndef _DEBUG  // kioskView.cpp의 디버그 버전

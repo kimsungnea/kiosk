@@ -3,15 +3,26 @@
 class CRectNow
 {
 public:
-	CRectMenu* menu; // 추가한 메뉴 객체(포인터)
-	CPoint pos; // 추가한 메뉴를 표시할 위치(좌상단)
-	int width; // 현황표시박스 너비
-	int height; // 현황표시박스 높이
+	// 민지원 ------------------------------------------------------------------------
+	CRectMenu* menu;
+	CPoint pos;
+	int width;
+	int height;
+	// 민지원 ------------------------------------------------------------------------
+
+	int count; // 김현준
 
 public:
+	// 민지원 ------------------------------------------------------------------------
 	CRectNow::CRectNow();
-	CRectNow::CRectNow(CPoint p, CRectMenu* m);	// 생성자
-	void CRectNow::draw(CDC* pDC); // 화면에 그리는 함수
-	bool CRectNow::checkClick(CPoint p); // 클릭판단 함수
+	CRectNow::CRectNow(CPoint p, CRectMenu* m);
+	void CRectNow::draw(CDC* pDC);
+	bool CRectNow::checkClick(CPoint p);
+	// 민지원 ------------------------------------------------------------------------
+
+	// 김현준 ------------------------------------------------------------------------
+	bool CRectNow::checkClick2(CPoint p);
+	bool CRectNow::checkClick3(CPoint p);
+	// 김현준 ------------------------------------------------------------------------
 };
 
