@@ -355,7 +355,7 @@ void CkioskView::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 		for (int i = 0; i < 12; i++) {
-			if (menu[m_nowTab][i]->checkClick(point) && m_numNow < NOWMAX && (menu[m_nowTab][i]->price != L"0")) {
+			if (menu[m_nowTab][i]->checkClick(point) && (menu[m_nowTab][i]->price != L"0")) {
 				bool isInNow = false;
 				for (int j = 0; j < m_numNow; j++) {
 					if (menu[m_nowTab][i] == now[j]->menu) {
@@ -365,9 +365,9 @@ void CkioskView::OnLButtonDown(UINT nFlags, CPoint point)
 						break;
 					}
 				}
-				if (isInNow) break;
+				if (isInNow || m_numNow >= NOWMAX) break;
 				now[m_numNow] = new CRectNow(CPoint(1490, 20 + 80 * m_numNow), menu[m_nowTab][i]);
-				p_now[m_numNow] = new Paymentbox(CPoint(250, 100 * m_numNow + 100), menu[m_nowTab][i]); //김성내
+				p_now[m_numNow] = new Paymentbox(CPoint(250, 100 * m_numNow + 70), menu[m_nowTab][i]); //김성내
 				m_status = MENU;
 				isClicked = true;
 				m_numNow++;
@@ -443,11 +443,11 @@ void CkioskView::OnMouseMove(UINT nFlags, CPoint point)
 		for (int i = 0; i < 12; i++) {
 			if (menu[m_nowTab][i]->checkClick(point)) {
 				menu[m_nowTab][i]->border = RGB(50, 50, 250);
-				Invalidate(false);
 			}
 			else {
 				menu[m_nowTab][i]->border = RGB(146, 216, 240);
 			}
+			Invalidate(false);
 		}
 	}
 	// 민지원 ------------------------------------------------------------------------

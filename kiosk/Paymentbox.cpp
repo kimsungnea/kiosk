@@ -18,13 +18,13 @@ void Paymentbox::draw(CDC* pDC)
 	pDC->SelectObject(rect1);
 	pDC->Rectangle(rect1);
 
-	CString priceStr; // ¹ÎÁö¿ø
-	priceStr.Format(_T("%d ¿ø"), _ttoi(menu->price) * count); // ¹ÎÁö¿ø
-	pDC->DrawText(priceStr, rect2, DT_RIGHT | DT_BOTTOM | DT_SINGLELINE); // ±è¼º³», ¹ÎÁö¿ø
+	CString priceStr;
+	priceStr.Format(_T("%d ¿ø"), _ttoi(menu->price) * count);
+	pDC->DrawText(priceStr, rect2, DT_RIGHT | DT_BOTTOM | DT_SINGLELINE);
 
-	CString countStr; // ¹ÎÁö¿ø
-	countStr.Format(_T("    %d °³"), count); // ¹ÎÁö¿ø
-	pDC->DrawText(menu->name+countStr, rect2, DT_LEFT | DT_BOTTOM | DT_SINGLELINE); // ±è¼º³», ¹ÎÁö¿ø
+	CString countStr;
+	countStr.Format(_T("    %d °³"), count);
+	pDC->DrawText(menu->name+countStr, rect2, DT_LEFT | DT_BOTTOM | DT_SINGLELINE);
 
 }
 // ±è¼º³» ------------------------------------------------------------------------
